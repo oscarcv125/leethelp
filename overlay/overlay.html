@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LeetHelp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Geist:wght@300..800&family=Geist+Mono:wght@400..700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap"
+    />
+    <link rel="stylesheet" href="overlay.css" />
+  </head>
+  <body>
+    <aside class="bookmark" id="miniHandle" role="button" aria-label="Expand LeetHelp" tabindex="0">
+      <span class="bookmark-mark">L</span>
+      <span class="bookmark-ornament">§</span>
+    </aside>
+
+    <div class="onboarding" id="onboarding">
+      <div class="onboarding-sheet">
+        <span class="onboarding-mark">§</span>
+        <h2 class="onboarding-title">Pick a look, then a backend</h2>
+        <p class="onboarding-lede">LeetHelp needs somewhere to send prompts. Everything is open source and runs in your browser. Nothing is logged.</p>
+        <div class="theme-picker" role="radiogroup" aria-label="Pick a look">
+          <label class="theme-swatch" data-preview="notebook">
+            <input type="radio" name="theme" value="notebook" />
+            <span class="swatch-preview notebook">
+              <span class="swatch-title">Notebook</span>
+              <span class="swatch-note">warm paper, serif</span>
+            </span>
+          </label>
+          <label class="theme-swatch" data-preview="modern">
+            <input type="radio" name="theme" value="modern" />
+            <span class="swatch-preview modern">
+              <span class="swatch-title">Modern</span>
+              <span class="swatch-note">clean sans, emerald</span>
+            </span>
+          </label>
+          <label class="theme-swatch" data-preview="codey">
+            <input type="radio" name="theme" value="codey" />
+            <span class="swatch-preview codey">
+              <span class="swatch-title">Codey</span>
+              <span class="swatch-note">mono, dark, IDE-like</span>
+            </span>
+          </label>
+        </div>
+
+        <div class="onboarding-choices">
+          <button type="button" class="onboarding-choice recommended" data-choice="proxy">
+            <span class="choice-title">Use the community proxy</span>
+            <span class="choice-note">A small Cloudflare Worker holds a free Groq key server-side. Rate limited per IP. No signup.</span>
+          </button>
+          <button type="button" class="onboarding-choice" data-choice="bring-key">
+            <span class="choice-title">Bring my own key</span>
+            <span class="choice-note">Paste your Groq, OpenAI, Anthropic, Gemini, or OpenRouter key. Stays in your browser.</span>
+          </button>
+          <button type="button" class="onboarding-choice ghost" data-choice="dismiss">
+            <span class="choice-title">Set up later</span>
+            <span class="choice-note">Skip for now. Most features stay disabled until you set one of the above.</span>
+          </button>
+        </div>
+        <p class="onboarding-fine"><a href="https://github.com/oscarcv125/leethelp/blob/main/PRIVACY.md" target="_blank" rel="noopener">privacy</a> · <a href="https://github.com/oscarcv125/leethelp" target="_blank" rel="noopener">source</a></p>
+      </div>
+    </div>
+
+    <div class="page">
+      <header class="masthead">
+        <div class="masthead-title">
+          <h1 class="wordmark">LeetHelp</h1>
+          <p class="dek" id="siteBadge">no problem detected</p>
+        </div>
+        <div class="masthead-actions">
+          <button class="link-btn" id="rescrapeBtn" title="Rescrape">rescrape</button>
+          <span class="dot">·</span>
+          <button class="link-btn" id="settingsBtn" title="Settings">settings</button>
+          <span class="dot">·</span>
+          <button class="link-btn glyph" id="minimizeBtn" title="Minimize to bookmark">—</button>
+          <span class="dot">·</span>
+          <button class="link-btn danger" id="closeBtn" title="Close">close</button>
+        </div>
+      </header>
+
+      <hr class="rule thick" />
+
+      <nav class="chapters" role="tablist">
+        <button class="chapter active" data-tab="hints" role="tab"><span class="numeral">i</span>hints</button>
+        <button class="chapter" data-tab="chat" role="tab"><span class="numeral">ii</span>dialogue</button>
+        <button class="chapter" data-tab="tools" role="tab"><span class="numeral">iii</span>tools</button>
+        <button class="chapter" data-tab="viz" role="tab"><span class="numeral">iv</span>visualize</button>
+        <button class="chapter" data-tab="reference" role="tab"><span class="numeral">v</span>reference</button>
+      </nav>
+
+      <hr class="rule" />
+
+      <main class="body">
+        <section class="folio active" data-panel="hints">
+          <div class="folio-head">
+            <span class="section-mark">§</span>
+            <h2 class="folio-title">Progressive hints</h2>
+            <div class="folio-controls">
+              <label class="inline-select">
+                <span>lang</span>
+                <select id="langSelect"></select>
+              </label>
+            </div>
+          </div>
+
+          <ol class="tier-list" id="tierStrip"></ol>
+
+          <div class="rule dashed"></div>
+
+          <article class="response" id="hintOut">
+            <p class="marginalia">Open a supported problem and choose a tier, or press <em>reveal next hint</em>. The free Groq model runs by default. Add your own key in <em>settings</em> if you want to try another provider.</p>
+          </article>
+
+          <div class="response-actions">
+            <button class="ghost-btn primary" id="askHintBtn">Reveal next hint  →</button>
+          </div>
+        </section>
+
+        <section class="folio" data-panel="chat">
+          <div class="folio-head">
+            <span class="section-mark">§</span>
+            <h2 class="folio-title">Dialogue</h2>
+          </div>
+          <div class="letters" id="chatLog"></div>
+          <form class="composer" id="chatForm">
+            <textarea id="chatInput" rows="2" placeholder="Ask about the problem, complexity, or an approach…"></textarea>
+            <button class="ghost-btn primary" type="submit">Send</button>
+          </form>
+        </section>
+
+        <section class="folio" data-panel="tools">
+          <div class="folio-head">
+            <span class="section-mark">§</span>
+            <h2 class="folio-title">Instruments</h2>
+          </div>
+          <ul class="tool-list">
+            <li><button data-tool="explain"><span class="tool-name">Explain a DSA</span><span class="tool-note">Pick a topic and get a deep dive with a worked example.</span></button></li>
+            <li><button data-tool="convert"><span class="tool-name">Convert code</span><span class="tool-note">Translate the editor's solution into another language.</span></button></li>
+            <li><button data-tool="review"><span class="tool-name">Review my code</span><span class="tool-note">Critique for correctness, complexity, and structure.</span></button></li>
+            <li><button data-tool="complexity"><span class="tool-name">Analyze complexity</span><span class="tool-note">Big-O for the current code, with justification.</span></button></li>
+            <li><button data-tool="testcases"><span class="tool-name">Edge cases</span><span class="tool-note">Tricky and adversarial tests to try.</span></button></li>
+            <li><button data-tool="patterns"><span class="tool-name">Related patterns</span><span class="tool-note">Similar problems and canonical templates.</span></button></li>
+          </ul>
+          <div class="rule dashed"></div>
+          <article class="response" id="toolOut"></article>
+        </section>
+
+        <section class="folio" data-panel="viz">
+          <div class="folio-head">
+            <span class="section-mark">§</span>
+            <h2 class="folio-title">Visualize</h2>
+            <div class="folio-controls">
+              <label class="inline-select">
+                <span>algo</span>
+                <select id="vizSelect">
+                  <option value="bfs">BFS · grid</option>
+                  <option value="dfs">DFS · grid</option>
+                  <option value="dijkstra">Dijkstra · weighted</option>
+                  <option value="astar">A* · grid</option>
+                  <option value="sort-bubble">Bubble sort</option>
+                  <option value="sort-quick">Quick sort</option>
+                  <option value="sort-merge">Merge sort</option>
+                  <option value="binary-search">Binary search</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="viz-controls">
+            <button class="link-btn" id="vizPlay">play</button>
+            <span class="dot">·</span>
+            <button class="link-btn" id="vizPause">pause</button>
+            <span class="dot">·</span>
+            <button class="link-btn" id="vizReset">reset</button>
+            <label class="inline-select speed">
+              <span>tempo</span>
+              <input type="range" id="vizSpeed" min="1" max="60" value="20" />
+            </label>
+          </div>
+          <figure class="plate">
+            <canvas id="vizCanvas" width="440" height="380"></canvas>
+            <figcaption id="vizCaption">Choose an algorithm and press <em>play</em>.</figcaption>
+          </figure>
+        </section>
+
+        <section class="folio" data-panel="reference">
+          <div class="folio-head">
+            <span class="section-mark">§</span>
+            <h2 class="folio-title">Reference</h2>
+          </div>
+
+          <div class="ref-view" data-view="list">
+            <div class="ref-filters">
+              <input type="search" id="refSearch" placeholder="search patterns, ideas, techniques" autocomplete="off" spellcheck="false" />
+              <label class="inline-select">
+                <span>chapter</span>
+                <select id="refCategory"></select>
+              </label>
+            </div>
+            <p class="ref-count" id="refCount"></p>
+            <ol class="entry-list" id="refList"></ol>
+            <p class="marginalia deep-dives" id="refFooter"></p>
+          </div>
+
+          <article class="ref-detail" id="refDetail" hidden>
+            <button class="link-btn back" id="refBack">←  back to index</button>
+            <div class="detail-body"></div>
+          </article>
+        </section>
+      </main>
+
+      <footer class="colophon">
+        <span class="col-left"><span class="tiny-label">provider</span> <em id="providerBadge">groq</em></span>
+        <span class="col-right"><span class="tiny-label">shortcuts</span> alt+l · alt+h</span>
+      </footer>
+    </div>
+
+    <script type="module" src="overlay.js"></script>
+  </body>
+</html>

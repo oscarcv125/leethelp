@@ -1,0 +1,125 @@
+#leethelp-host { all: initial; }
+
+#leethelp-fab {
+  all: initial;
+  position: fixed !important;
+  right: 22px !important;
+  bottom: 22px !important;
+  z-index: 2147483646 !important;
+  width: 50px;
+  height: 50px;
+  border-radius: 2px;
+  background: #FAF6EE;
+  color: #1B1712;
+  font-family: "Fraunces", "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  border: 1px solid #1B1712;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 0.14s ease, background 0.14s;
+  box-shadow: 4px 4px 0 0 #1B1712;
+}
+#leethelp-fab:hover {
+  background: #F2ECDF;
+  transform: translate(-1px, -1px);
+  color: #A0442E;
+}
+#leethelp-fab::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid #E5DBC7;
+  pointer-events: none;
+}
+#leethelp-fab .lh-fab-mark {
+  all: unset;
+  color: inherit;
+  font-family: inherit;
+  font-style: italic;
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: 1;
+}
+
+/* Full overlay iframe, bigger default; positioned & sized inline by JS once
+   the user drags or resizes. Style overrides come from JS via style prop. */
+#leethelp-overlay-frame {
+  all: initial;
+  position: fixed !important;
+  right: 22px !important;
+  top: 22px !important;
+  width: 580px !important;
+  height: min(880px, calc(100vh - 44px)) !important;
+  border: 1px solid #1B1712 !important;
+  border-radius: 3px !important;
+  box-shadow: 6px 6px 0 0 #1B1712, 0 0 40px rgba(27, 23, 18, 0.12) !important;
+  z-index: 2147483645 !important;
+  background: #FAF6EE !important;
+  display: none;
+}
+
+#leethelp-overlay-frame.visible { display: block !important; }
+
+/* Only animate the minimize morph; disable animation while user drags/resizes
+   so it snaps to the pointer without lag. */
+#leethelp-overlay-frame.minimized {
+  transition:
+    width 0.32s cubic-bezier(0.4, 0.2, 0.2, 1),
+    height 0.32s cubic-bezier(0.4, 0.2, 0.2, 1),
+    right 0.32s cubic-bezier(0.4, 0.2, 0.2, 1),
+    top 0.32s cubic-bezier(0.4, 0.2, 0.2, 1),
+    border-radius 0.32s cubic-bezier(0.4, 0.2, 0.2, 1),
+    clip-path 0.32s cubic-bezier(0.4, 0.2, 0.2, 1),
+    box-shadow 0.32s cubic-bezier(0.4, 0.2, 0.2, 1);
+  width: 40px !important;
+  height: 120px !important;
+  right: 0 !important;
+  left: auto !important;
+  top: 33% !important;
+  border-radius: 0 !important;
+  border-right: none !important;
+  clip-path: polygon(100% 0, 100% 100%, 30% 100%, 0 50%, 30% 0) !important;
+  box-shadow: -4px 4px 0 0 #1B1712 !important;
+}
+
+/* Resize grabber pinned to bottom-right corner of the iframe.
+   Positioned by JS via getBoundingClientRect. */
+#leethelp-resize {
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  width: 14px;
+  height: 14px;
+  background: transparent;
+  cursor: nwse-resize;
+  border-right: 2px solid #1B1712;
+  border-bottom: 2px solid #1B1712;
+  display: none;
+  pointer-events: auto;
+}
+#leethelp-resize.visible { display: block; }
+
+/* Full-viewport transparent capture layer used while dragging/resizing to
+   swallow pointer events over the iframe. */
+#leethelp-capture {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483646 !important;
+  background: transparent;
+  cursor: grabbing;
+  display: none;
+}
+#leethelp-capture.visible { display: block; }
+#leethelp-capture.resizing { cursor: nwse-resize; }
+
+@media (max-width: 680px) {
+  #leethelp-overlay-frame {
+    right: 8px !important;
+    top: 8px !important;
+    width: calc(100vw - 16px) !important;
+    height: calc(100vh - 16px) !important;
+  }
+}

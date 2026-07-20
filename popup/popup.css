@@ -1,0 +1,144 @@
+:root {
+  --paper:  #FAF6EE;
+  --paper-2:#F2ECDF;
+  --ink:    #1B1712;
+  --ink-2:  #4A4238;
+  --ink-3:  #7A6F5F;
+  --ink-4:  #B3A997;
+  --rule:   #E5DBC7;
+  --rule-2: #C9BEA5;
+  --accent: #A0442E;
+  --accent-2: #7A2F1E;
+
+  --serif:  "Newsreader", "Times New Roman", serif;
+  --display:"Fraunces", "Newsreader", serif;
+
+  --display-style: italic;
+}
+
+[data-theme="modern"] {
+  --paper:  #FBFBFA; --paper-2:#F5F5F4;
+  --ink:    #0C0A09; --ink-2:  #292524; --ink-3:  #57534E; --ink-4:  #A8A29E;
+  --rule:   #E7E5E4; --rule-2: #D6D3D1;
+  --accent: #059669; --accent-2: #047857;
+  --serif:  "Geist", ui-sans-serif, system-ui, sans-serif;
+  --display:"Geist", ui-sans-serif, system-ui, sans-serif;
+  --display-style: normal;
+}
+
+[data-theme="codey"] {
+  --paper:  #0D1117; --paper-2:#161B22;
+  --ink:    #E6EDF3; --ink-2:  #C9D1D9; --ink-3:  #8B949E; --ink-4:  #6E7681;
+  --rule:   #21262D; --rule-2: #30363D;
+  --accent: #58A6FF; --accent-2: #388BFD;
+  --serif:  "JetBrains Mono", ui-monospace, monospace;
+  --display:"JetBrains Mono", ui-monospace, monospace;
+  --display-style: normal;
+}
+
+[data-theme="modern"] .wordmark { font-weight: 600; font-style: normal; letter-spacing: -0.02em; }
+[data-theme="modern"] .dek { font-style: normal; }
+[data-theme="modern"] .dek::before { content: ""; }
+[data-theme="modern"] .cursor { display: none; }
+[data-theme="modern"] .btn { border-radius: 8px; font-style: normal; font-weight: 500; }
+[data-theme="modern"] select { border-radius: 8px; padding: 6px 10px; }
+
+[data-theme="codey"] .wordmark { font-weight: 700; font-style: normal; letter-spacing: -0.02em; }
+[data-theme="codey"] .dek { font-style: normal; }
+[data-theme="codey"] .dek::before { content: "$ "; color: var(--accent); }
+[data-theme="codey"] .cursor { color: var(--accent); }
+[data-theme="codey"] .btn { background: var(--paper-2); color: var(--ink); border-color: var(--rule-2); border-radius: 4px; font-style: normal; }
+[data-theme="codey"] .btn:hover { border-color: var(--accent); color: var(--accent); }
+[data-theme="codey"] .btn.primary { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+[data-theme="codey"] select { background: var(--paper-2); border-color: var(--rule-2); color: var(--ink); }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  width: 320px;
+  padding: 18px 20px 16px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 13px/1.55 var(--serif);
+  font-optical-sizing: auto;
+}
+
+header { margin-bottom: 4px; }
+
+.wordmark {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 28px;
+  color: var(--ink);
+  line-height: 1;
+  font-variation-settings: "opsz" 96;
+}
+.dek {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-top: 4px;
+}
+.dek::before { content: "▸ "; color: var(--accent); font-style: normal; }
+
+.rule { border: none; height: 1px; background: var(--rule); margin: 12px 0; }
+.rule.thick { height: 2px; background: var(--ink); margin: 10px 0; }
+
+.settings { display: grid; gap: 10px; }
+.row { display: flex; align-items: baseline; gap: 12px; }
+.row > span {
+  min-width: 92px;
+  font-family: var(--serif);
+  font-variant: small-caps;
+  letter-spacing: 0.12em;
+  font-size: 10.5px;
+  color: var(--ink-3);
+}
+.row em { font-style: normal; color: var(--accent); }
+
+select, input[type="range"] {
+  flex: 1;
+  font: 400 12.5px var(--serif);
+  font-style: italic;
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--rule-2);
+  padding: 3px 2px;
+  outline: none;
+}
+select:focus, input:focus { border-bottom-color: var(--accent); }
+input[type="range"] { accent-color: var(--accent); padding: 4px 0; }
+
+.ghost-btn {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  padding: 8px 14px;
+  font: 400 italic 14px var(--display);
+  cursor: pointer;
+  border-radius: 2px;
+  margin-bottom: 8px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.ghost-btn:hover { background: var(--ink); color: var(--paper); }
+.ghost-btn.primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+.ghost-btn.primary:hover { background: var(--accent); border-color: var(--accent); }
+
+.colophon {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 11px;
+  color: var(--ink-3);
+  text-align: center;
+}

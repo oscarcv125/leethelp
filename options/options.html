@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>LeetHelp settings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Geist:wght@300..800&family=Geist+Mono:wght@400..700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap"
+    />
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="masthead">
+        <div>
+          <h1 class="wordmark">LeetHelp</h1>
+          <p class="dek">Bring your own key or use the community proxy</p>
+        </div>
+      </header>
+
+      <hr class="rule thick" />
+
+      <section class="chapter">
+        <h2 class="chapter-title"><span class="mark">§</span> Look</h2>
+        <p class="marginalia">Pick a visual style. Changes apply instantly.</p>
+        <div class="theme-picker" id="themePicker" role="radiogroup" aria-label="Theme">
+          <label class="theme-swatch" data-preview="notebook">
+            <input type="radio" name="opt-theme" value="notebook" />
+            <span class="swatch-preview notebook">
+              <span class="swatch-title">Notebook</span>
+              <span class="swatch-note">warm paper, serif, oxblood</span>
+            </span>
+          </label>
+          <label class="theme-swatch" data-preview="modern">
+            <input type="radio" name="opt-theme" value="modern" />
+            <span class="swatch-preview modern">
+              <span class="swatch-title">Modern</span>
+              <span class="swatch-note">clean sans, emerald accent</span>
+            </span>
+          </label>
+          <label class="theme-swatch" data-preview="codey">
+            <input type="radio" name="opt-theme" value="codey" />
+            <span class="swatch-preview codey">
+              <span class="swatch-title">Codey</span>
+              <span class="swatch-note">JetBrains Mono, GitHub dark</span>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <section class="chapter">
+        <h2 class="chapter-title"><span class="mark">§</span> Community proxy</h2>
+        <p class="marginalia">Route Groq calls through an open-source Cloudflare Worker that holds the key server-side (no key needed on your end). Leave blank to disable. Source is in <em>/proxy</em>. You can self-host in about ten minutes.</p>
+        <label class="row">
+          <span>proxy url</span>
+          <input type="url" id="proxyUrl" placeholder="https://leethelp-proxy.oscar.workers.dev" autocomplete="off" spellcheck="false" />
+        </label>
+        <p class="marginalia" style="margin-top:12px">
+          Want to see the welcome sheet again on next open?
+          <button id="resetOnboarding" class="ghost-btn" style="margin-left:8px; padding:4px 10px; font-size:12px">Replay onboarding</button>
+        </p>
+      </section>
+
+      <hr class="rule" />
+
+      <section class="chapter">
+        <h2 class="chapter-title"><span class="mark">§</span> Providers &amp; keys</h2>
+        <p class="marginalia">Keys are stored in <em>chrome.storage.sync</em> and are only ever sent to the provider you select. No default key is baked in. Either use the community proxy above, or paste your own key below.</p>
+        <div class="keys" id="keys"></div>
+      </section>
+
+      <hr class="rule" />
+
+      <section class="chapter">
+        <h2 class="chapter-title"><span class="mark">§</span> Defaults</h2>
+        <div class="defaults">
+          <label class="row">
+            <span>default provider</span>
+            <select id="provider"></select>
+          </label>
+          <label class="row">
+            <span>default model</span>
+            <select id="model"></select>
+          </label>
+          <label class="row">
+            <span>preferred language</span>
+            <select id="language"></select>
+          </label>
+          <label class="row">
+            <span>temperature <em id="tempVal">0.4</em></span>
+            <input type="range" id="temperature" min="0" max="10" step="1" />
+          </label>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <section class="chapter">
+        <h2 class="chapter-title"><span class="mark">§</span> Test connection</h2>
+        <button id="testBtn" class="ghost-btn primary">Send a test prompt  →</button>
+        <pre id="testOut" class="testout"></pre>
+      </section>
+
+      <footer class="colophon">
+        <span><em>alt+l</em> toggles overlay · <em>alt+h</em> reveals next hint</span>
+        <span id="saveStatus" class="save"></span>
+      </footer>
+    </div>
+  </body>
+  <script type="module" src="options.js"></script>
+</html>

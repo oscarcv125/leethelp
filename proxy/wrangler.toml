@@ -1,0 +1,12 @@
+name = "leethelp-proxy"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+# Optional per-IP rate limiter. Create a KV namespace with:
+#   wrangler kv:namespace create RATE_KV
+# then paste the returned id below and re-deploy.
+# [[kv_namespaces]]
+# binding = "RATE_KV"
+# id = "..."
+
+# Secrets are NOT set here — use `wrangler secret put GROQ_API_KEY` after login.
