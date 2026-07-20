@@ -1385,7 +1385,8 @@ pre.lh-code code::-webkit-scrollbar-thumb {
   .page { padding: 12px 14px 8px; }
   .wordmark { font-size: 24px; }
   .chapters { gap: 14px; }
-  .folio-controls { display: none; }
+  .folio-head { flex-wrap: wrap; }
+  .folio-controls { margin-left: 0; width: 100%; }
 }
 
 .theme-picker {

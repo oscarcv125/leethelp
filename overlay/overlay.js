@@ -435,22 +435,37 @@ function bindViz() {
   const sel = $("#vizSelect");
   const speed = $("#vizSpeed");
   const caption = $("#vizCaption");
+  if (!canvas || !sel) return;
   let controller = null;
-  const start = () => {
-    controller?.stop();
+  let currentKind = null;
+
+  const start = (kind) => {
+    const chosen = kind || sel.value;
+    try { controller?.stop(); } catch {}
+    controller = null;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     controller = runVisualization({
-      kind: sel.value,
+      kind: chosen,
       canvas,
-      speed: Number(speed.value),
-      onCaption: (t) => (caption.textContent = t)
+      speed: Number(speed.value) || 20,
+      onCaption: (t) => { caption.textContent = t; }
     });
+    currentKind = chosen;
     controller.play();
   };
-  $("#vizPlay").addEventListener("click", () => (controller ? controller.play() : start()));
-  $("#vizPause").addEventListener("click", () => controller?.pause());
-  $("#vizReset").addEventListener("click", () => start());
-  sel.addEventListener("change", () => start());
+
+  const onChange = () => {
+    if (sel.value !== currentKind) start(sel.value);
+  };
+
+  $("#vizPlay")?.addEventListener("click", () => (controller ? controller.play() : start()));
+  $("#vizPause")?.addEventListener("click", () => controller?.pause());
+  $("#vizReset")?.addEventListener("click", () => start(sel.value));
+  sel.addEventListener("change", onChange);
+  sel.addEventListener("input", onChange);
   speed.addEventListener("input", () => controller?.setSpeed?.(Number(speed.value)));
+
   start();
 }
 function bindReferenceExplorer() {
