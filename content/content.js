@@ -110,6 +110,19 @@
     }
   }
 
+  function grabMonacoModelText() {
+    return new Promise((resolve) => {
+      if (!document.querySelector(".monaco-editor")) return resolve("");
+      try {
+        chrome.runtime.sendMessage({ type: "leethelp:grabMonaco" }, (resp) => {
+          resolve(resp?.text || "");
+        });
+      } catch {
+        resolve("");
+      }
+    });
+  }
+
   function sendScrape() {
     const iframe = document.getElementById(IFRAME_ID);
     if (!iframe?.contentWindow) return;
@@ -252,15 +265,18 @@
         startDrag(ev.data.startX, ev.data.startY);
         break;
       case "grabEditorCode": {
-        const code =
-          document.querySelector(".monaco-editor .view-lines")?.innerText ||
-          document.querySelector("textarea.ace_text-input")?.value ||
-          document.querySelector("textarea")?.value ||
-          "";
-        ev.source?.postMessage(
-          { type: "leethelp:editorCode", code, requestId: ev.data.requestId },
-          "*"
-        );
+        (async () => {
+          const code =
+            (await grabMonacoModelText()) ||
+            document.querySelector(".monaco-editor .view-lines")?.innerText ||
+            document.querySelector("textarea.ace_text-input")?.value ||
+            document.querySelector("textarea")?.value ||
+            "";
+          ev.source?.postMessage(
+            { type: "leethelp:editorCode", code, requestId: ev.data.requestId },
+            "*"
+          );
+        })();
         break;
       }
     }

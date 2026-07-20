@@ -4,6 +4,7 @@ import {
   buildExplainMessages,
   buildConvertMessages,
   buildReviewMessages,
+  buildRateMessages,
   buildFreeformMessages
 } from "../lib/prompts.js";
 import { PROVIDERS, DEFAULT_PROXY_URL } from "../lib/providers.js";
@@ -169,6 +170,7 @@ async function requestHint(tier) {
   }
   currentTier = tier;
   highlightTier(tier);
+  $("#tierStrip")?.classList.add("compact");
   const language = $("#langSelect").value;
   const built = buildHintMessages({ tier, problem: problem.raw, language });
   await streamChat(built, $("#hintOut"));
@@ -178,7 +180,7 @@ async function nextHint() {
   const target = Math.min((currentTier || 0) + 1, HINT_TIERS.length);
   await requestHint(target);
 }
-function streamChat(built, targetEl) {
+function streamChat(built, targetEl, { postProcess } = {}) {
   const messages = Array.isArray(built) ? built : built.messages;
   const retrievedIds = Array.isArray(built) ? [] : built.retrievedIds || [];
   return new Promise((resolve, reject) => {
@@ -191,14 +193,18 @@ function streamChat(built, targetEl) {
           .join("")}</div>`
       : "";
     let raw = "";
+    const paint = (final = false) => {
+      const processed = postProcess ? postProcess(raw, { final }) : { rendered: renderMarkdown(raw) };
+      targetEl.innerHTML = groundingHtml + (processed.rendered ?? renderMarkdown(processed.text ?? raw));
+    };
     p.onMessage.addListener((msg) => {
       if (msg.requestId && msg.requestId !== requestId) return;
       if (msg.type === "delta") {
         raw += msg.delta;
-        targetEl.innerHTML = groundingHtml + renderMarkdown(raw);
+        paint(false);
       } else if (msg.type === "done") {
         targetEl.classList.remove("streaming");
-        targetEl.innerHTML = groundingHtml + renderMarkdown(raw);
+        paint(true);
         p.disconnect();
         resolve(raw);
       } else if (msg.type === "error") {
@@ -210,6 +216,64 @@ function streamChat(built, targetEl) {
     });
     p.postMessage({ type: "chat", messages, requestId });
   });
+}
+
+const GRADE_TIER = {
+  "A+": 4.3, "A": 4, "A-": 3.7,
+  "B+": 3.3, "B": 3, "B-": 2.7,
+  "C+": 2.3, "C": 2, "C-": 1.7,
+  "D+": 1.3, "D": 1, "D-": 0.7,
+  "F+": 0.3, "F": 0
+};
+
+function gradeClass(g) {
+  const v = GRADE_TIER[g?.toUpperCase()] ?? -1;
+  if (v >= 3.7) return "grade-a";
+  if (v >= 2.7) return "grade-b";
+  if (v >= 1.7) return "grade-c";
+  if (v >= 0.7) return "grade-d";
+  if (v >= 0)   return "grade-f";
+  return "grade-x";
+}
+
+const RATING_AXES = [
+  ["overall",     "Overall"],
+  ["correctness", "Correctness"],
+  ["complexity",  "Complexity"],
+  ["style",       "Style"],
+  ["edge_cases",  "Edge cases"]
+];
+
+function renderRating(raw, { final } = {}) {
+  const match = raw.match(/<rating>([\s\S]*?)<\/rating>/i);
+  if (!match) {
+    if (final && /<rating>/i.test(raw)) return { rendered: renderMarkdown(raw) };
+    return { rendered: renderMarkdown(raw) };
+  }
+  const block = match[1];
+  const grades = {};
+  block.split(/\r?\n/).forEach((line) => {
+    const kv = line.match(/^\s*(\w[\w_ ]*)\s*:\s*([A-F][+\-]?|-)\s*$/i);
+    if (kv) grades[kv[1].trim().toLowerCase().replace(/\s+/g, "_")] = kv[2].toUpperCase();
+  });
+  const overall = grades.overall || "";
+  const rows = RATING_AXES
+    .filter(([k]) => k !== "overall")
+    .map(([k, label]) => {
+      const g = grades[k] || "";
+      return `<div class="rating-row"><span class="rating-axis">${label}</span><span class="rating-grade ${gradeClass(g)}">${escapeHtml(g || "—")}</span></div>`;
+    })
+    .join("");
+  const card = `
+    <div class="rating-card">
+      <div class="rating-overall ${gradeClass(overall)}">
+        <span class="rating-overall-grade">${escapeHtml(overall || "—")}</span>
+        <span class="rating-overall-label">overall</span>
+      </div>
+      <div class="rating-rows">${rows}</div>
+    </div>`;
+  const rest = raw.slice(0, match.index) + raw.slice(match.index + match[0].length);
+  return { rendered: card + renderMarkdown(rest) };
 }
 function appendLetter(who, body) {
   const log = $("#chatLog");
@@ -280,9 +344,42 @@ function grabEditorCode() {
     }, 1500);
   });
 }
+const TOOL_LABELS = {
+  explain:    "Explain a DSA",
+  convert:    "Convert code",
+  rate:       "Rate my solution",
+  review:     "Review my code",
+  complexity: "Analyze complexity",
+  testcases:  "Edge cases",
+  patterns:   "Related patterns"
+};
+
+function openToolDetail(kind) {
+  const list = document.querySelector('.tools-view[data-view="list"]');
+  const detail = document.querySelector('.tools-view[data-view="detail"]');
+  const crumb = $("#toolCrumb");
+  if (list && detail) {
+    list.hidden = true;
+    detail.hidden = false;
+  }
+  if (crumb) crumb.textContent = TOOL_LABELS[kind] || kind;
+}
+
+function closeToolDetail() {
+  const list = document.querySelector('.tools-view[data-view="list"]');
+  const detail = document.querySelector('.tools-view[data-view="detail"]');
+  if (list && detail) {
+    list.hidden = false;
+    detail.hidden = true;
+  }
+  const out = $("#toolOut");
+  if (out) out.innerHTML = "";
+}
+
 async function runTool(kind) {
   const out = $("#toolOut");
   const language = $("#langSelect").value;
+  openToolDetail(kind);
   out.innerHTML = `<p class="lh-empty">working…</p>`;
   if (kind === "explain") {
     const topic = prompt("Which topic or DSA? e.g. sliding window, union-find, segment tree");
@@ -293,6 +390,12 @@ async function runTool(kind) {
     if (!code) return void (out.innerHTML = `<p class="lh-empty">No code found in the editor.</p>`);
     const toLang = prompt("Convert to which language?", language) || language;
     await streamChat(buildConvertMessages({ code, fromLang: language, toLang, problem: problem?.raw }), out);
+  } else if (kind === "rate") {
+    const code = await grabEditorCode();
+    if (!code) return void (out.innerHTML = `<p class="lh-empty">No code found in the editor.</p>`);
+    await streamChat(buildRateMessages({ code, language, problem: problem?.raw }), out, {
+      postProcess: renderRating
+    });
   } else if (kind === "review") {
     const code = await grabEditorCode();
     if (!code) return void (out.innerHTML = `<p class="lh-empty">No code found in the editor.</p>`);
@@ -324,6 +427,8 @@ function bindTools() {
   $$(".tool-list button").forEach((btn) => {
     btn.addEventListener("click", () => runTool(btn.dataset.tool));
   });
+  const back = $("#toolBack");
+  if (back) back.addEventListener("click", closeToolDetail);
 }
 function bindViz() {
   const canvas = $("#vizCanvas");
@@ -418,43 +523,43 @@ function bindReferenceExplorer() {
     const refs = REFS[id] || [];
     const body = detailView.querySelector(".detail-body");
 
+    const section = (label, contents, open = true) =>
+      `<details class="detail-section"${open ? " open" : ""}><summary class="detail-label">${escapeHtml(label)}</summary>${contents}</details>`;
+
     const parts = [];
     parts.push(`<div class="detail-category">${escapeHtml(categoryOf(entry))}</div>`);
     parts.push(`<h3 class="detail-title">${escapeHtml(entry.title)}</h3>`);
 
     if (entry.when) {
-      parts.push(`<div class="detail-label">when to reach for it</div>`);
-      parts.push(`<p>${escapeHtml(entry.when)}</p>`);
+      parts.push(section("when to reach for it", `<p>${escapeHtml(entry.when)}</p>`));
     }
     if (entry.idea) {
-      parts.push(`<div class="detail-label">the idea</div>`);
-      parts.push(`<p>${escapeHtml(entry.idea)}</p>`);
+      parts.push(section("the idea", `<p>${escapeHtml(entry.idea)}</p>`));
     }
     if (entry.watch?.length) {
-      parts.push(`<div class="detail-label">watch</div>`);
-      parts.push(`<ul>${entry.watch.map((w) => `<li>${escapeHtml(w)}</li>`).join("")}</ul>`);
+      parts.push(section("watch", `<ul>${entry.watch.map((w) => `<li>${escapeHtml(w)}</li>`).join("")}</ul>`));
     }
     if (template) {
-      parts.push(`<div class="detail-label">template (${escapeHtml(template.language)})</div>`);
-      parts.push(
+      const code =
         `<pre class="lh-code" data-lang="${escapeHtml(template.language)}">` +
           `<div class="lh-code-head"><span class="lh-code-lang">${escapeHtml(template.language)}</span>` +
           `<button class="lh-code-copy" type="button">copy</button></div>` +
           `<code>${highlightCode(template.code, template.language)}</code>` +
-        `</pre>`
-      );
+        `</pre>`;
+      parts.push(section(`template (${template.language})`, code, false));
     }
     if (refs.length) {
-      parts.push(`<div class="detail-label">external</div>`);
-      parts.push(
-        `<div class="detail-refs">${refs
-          .map((r) => `<a href="${escapeHtml(r.url)}" target="_blank" rel="noopener">${escapeHtml(r.label)} ↗</a>`)
-          .join("")}</div>`
-      );
+      const links = `<div class="detail-refs">${refs
+        .map((r) => `<a href="${escapeHtml(r.url)}" target="_blank" rel="noopener">${escapeHtml(r.label)} ↗</a>`)
+        .join("")}</div>`;
+      parts.push(section("external", links, false));
     }
-    parts.push(`<div class="detail-label">tags</div>`);
     parts.push(
-      `<div class="detail-tags">${entry.tags.map((t) => `<span>${escapeHtml(t)}</span>`).join("")}</div>`
+      section(
+        "tags",
+        `<div class="detail-tags">${entry.tags.map((t) => `<span>${escapeHtml(t)}</span>`).join("")}</div>`,
+        false
+      )
     );
     parts.push(
       `<div class="detail-actions">
@@ -681,6 +786,26 @@ function bindOnboarding() {
   }
 }
 
+function bindCompactHeader() {
+  const body = document.body;
+  const check = () => body.classList.toggle("compact-head", window.innerWidth < 500);
+  check();
+  window.addEventListener("resize", check);
+}
+
+function bindColophonDismiss() {
+  const foot = $("#colophon");
+  const btn = $("#colophonClose");
+  if (!foot || !btn) return;
+  try {
+    if (localStorage.getItem("leethelp:colophon") === "hidden") foot.classList.add("hidden");
+  } catch {}
+  btn.addEventListener("click", () => {
+    foot.classList.add("hidden");
+    try { localStorage.setItem("leethelp:colophon", "hidden"); } catch {}
+  });
+}
+
 function bindThemeSync() {
   if (!chrome.storage?.onChanged) return;
   chrome.storage.onChanged.addListener((changes, area) => {
@@ -704,6 +829,8 @@ async function init() {
   bindHeader();
   bindDrag();
   bindCodeCopy();
+  bindCompactHeader();
+  bindColophonDismiss();
   handleParentMessages();
   bindOnboarding();
   setProviderBadge();

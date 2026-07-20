@@ -135,18 +135,29 @@
         <section class="folio" data-panel="tools">
           <div class="folio-head">
             <span class="section-mark">§</span>
-            <h2 class="folio-title">Instruments</h2>
+            <h2 class="folio-title" id="toolsTitle">Instruments</h2>
           </div>
-          <ul class="tool-list">
-            <li><button data-tool="explain"><span class="tool-name">Explain a DSA</span><span class="tool-note">Pick a topic and get a deep dive with a worked example.</span></button></li>
-            <li><button data-tool="convert"><span class="tool-name">Convert code</span><span class="tool-note">Translate the editor's solution into another language.</span></button></li>
-            <li><button data-tool="review"><span class="tool-name">Review my code</span><span class="tool-note">Critique for correctness, complexity, and structure.</span></button></li>
-            <li><button data-tool="complexity"><span class="tool-name">Analyze complexity</span><span class="tool-note">Big-O for the current code, with justification.</span></button></li>
-            <li><button data-tool="testcases"><span class="tool-name">Edge cases</span><span class="tool-note">Tricky and adversarial tests to try.</span></button></li>
-            <li><button data-tool="patterns"><span class="tool-name">Related patterns</span><span class="tool-note">Similar problems and canonical templates.</span></button></li>
-          </ul>
-          <div class="rule dashed"></div>
-          <article class="response" id="toolOut"></article>
+
+          <div class="tools-view" data-view="list">
+            <ul class="tool-list">
+              <li><button type="button" data-tool="explain"><span class="tool-name">Explain a DSA</span><span class="tool-note">Pick a topic and get a deep dive with a worked example.</span></button></li>
+              <li><button type="button" data-tool="convert"><span class="tool-name">Convert code</span><span class="tool-note">Translate the editor's solution into another language.</span></button></li>
+              <li><button type="button" data-tool="rate"><span class="tool-name">Rate my solution</span><span class="tool-note">Grade correctness, complexity, style, and edge cases.</span></button></li>
+              <li><button type="button" data-tool="review"><span class="tool-name">Review my code</span><span class="tool-note">Critique for correctness, complexity, and structure.</span></button></li>
+              <li><button type="button" data-tool="complexity"><span class="tool-name">Analyze complexity</span><span class="tool-note">Big-O for the current code, with justification.</span></button></li>
+              <li><button type="button" data-tool="testcases"><span class="tool-name">Edge cases</span><span class="tool-note">Tricky and adversarial tests to try.</span></button></li>
+              <li><button type="button" data-tool="patterns"><span class="tool-name">Related patterns</span><span class="tool-note">Similar problems and canonical templates.</span></button></li>
+            </ul>
+          </div>
+
+          <div class="tools-view" data-view="detail" hidden>
+            <div class="tools-crumbs">
+              <button type="button" class="link-btn back" id="toolBack">←  instruments</button>
+              <span class="dot">·</span>
+              <span class="crumb-active" id="toolCrumb"></span>
+            </div>
+            <article class="response" id="toolOut"></article>
+          </div>
         </section>
 
         <section class="folio" data-panel="viz">
@@ -212,9 +223,12 @@
         </section>
       </main>
 
-      <footer class="colophon">
+      <footer class="colophon" id="colophon">
         <span class="col-left"><span class="tiny-label">provider</span> <em id="providerBadge">groq</em></span>
-        <span class="col-right"><span class="tiny-label">shortcuts</span> alt+l · alt+h</span>
+        <span class="col-right">
+          <span class="tiny-label">shortcuts</span> alt+l · alt+h
+          <button type="button" class="col-dismiss" id="colophonClose" title="Hide footer" aria-label="Hide footer">×</button>
+        </span>
       </footer>
     </div>
 

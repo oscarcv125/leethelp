@@ -76,7 +76,34 @@ chrome.runtime.onConnect.addListener((port) => {
   });
 });
 
-chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg?.type === "leethelp:grabMonaco") {
+    if (!sender.tab?.id) { sendResponse({ text: "" }); return true; }
+    chrome.scripting
+      .executeScript({
+        target: { tabId: sender.tab.id },
+        world: "MAIN",
+        func: () => {
+          try {
+            if (window.monaco && window.monaco.editor && typeof window.monaco.editor.getModels === "function") {
+              const models = window.monaco.editor.getModels();
+              if (models && models.length) {
+                let best = models[0], bestLen = 0;
+                for (const m of models) {
+                  const v = m.getValue ? m.getValue() : "";
+                  if (v && v.length > bestLen) { best = m; bestLen = v.length; }
+                }
+                return best.getValue();
+              }
+            }
+          } catch (e) {}
+          return "";
+        }
+      })
+      .then((results) => sendResponse({ text: results?.[0]?.result || "" }))
+      .catch(() => sendResponse({ text: "" }));
+    return true;
+  }
   (async () => {
     if (msg?.type === "settings:get") sendResponse(await getSettings());
     else if (msg?.type === "settings:set") sendResponse(await setSettings(msg.patch || {}));
