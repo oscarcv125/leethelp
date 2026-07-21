@@ -9,9 +9,11 @@ Copy-paste-ready fields for the [developer dashboard](https://chrome.google.com/
 - **Language**: English
 - **Homepage URL**: `https://github.com/oscarcv125/leethelp`
 - **Support URL**: `https://github.com/oscarcv125/leethelp/issues`
-- **Privacy policy URL**: `https://fortiasmart.me/leethelp/privacy.html`
+- **Privacy policy URL**: `https://oscarcv125.github.io/leethelp/privacy.html`
 
-Served by the `privacy.html` file at the repo root via GitHub Pages, routed through your custom domain.
+Served by the `privacy.html` file at the repo root via GitHub Pages.
+
+*(If your `fortiasmart.me` custom domain is up, `https://fortiasmart.me/leethelp/privacy.html` also works and reads more legit on the store listing. Use whichever resolves reliably.)*
 
 ## Summary (132 characters max)
 
