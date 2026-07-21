@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LeetHelp — Privacy Policy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap"
+    />
+    <style>
+      :root {
+        --paper: #FAF6EE;
+        --ink: #1B1712;
+        --ink-2: #4A4238;
+        --ink-3: #7A6F5F;
+        --rule: #E5DBC7;
+        --accent: #A0442E;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font: 400 16px/1.65 "Newsreader", "Times New Roman", serif;
+        padding: 60px 24px 100px;
+        min-height: 100vh;
+      }
+      main { max-width: 720px; margin: 0 auto; }
+      header { margin-bottom: 28px; padding-bottom: 20px; border-bottom: 2px solid var(--ink); }
+      h1 {
+        font-family: "Fraunces", "Newsreader", serif;
+        font-style: italic;
+        font-weight: 500;
+        font-size: 44px;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+        font-variation-settings: "opsz" 144;
+      }
+      .dek { color: var(--ink-3); font-style: italic; margin-top: 6px; font-size: 15px; }
+      .dek::before { content: "▸ "; color: var(--accent); font-style: normal; }
+      h2 {
+        font-family: "Fraunces", "Newsreader", serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 24px;
+        margin: 34px 0 8px;
+        font-variation-settings: "opsz" 60;
+      }
+      p, ul { margin: 8px 0; }
+      ul { margin-left: 22px; }
+      li { margin: 4px 0; }
+      strong { color: var(--ink); }
+      a { color: var(--accent); border-bottom: 1px dotted var(--accent); text-decoration: none; }
+      a:hover { border-bottom-style: solid; }
+      code {
+        background: #F2ECDF;
+        border: 1px solid var(--rule);
+        padding: 1px 5px;
+        border-radius: 2px;
+        font-family: ui-monospace, Menlo, Consolas, monospace;
+        font-size: 13.5px;
+        color: var(--accent);
+      }
+      footer {
+        margin-top: 48px;
+        padding-top: 18px;
+        border-top: 1px solid var(--rule);
+        color: var(--ink-3);
+        font-style: italic;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Privacy Policy</h1>
+        <p class="dek">LeetHelp browser extension</p>
+      </header>
+
+      <p>
+        Short version: LeetHelp runs in your browser. There is no LeetHelp server.
+        The extension talks to whichever LLM provider you configure, and (optionally)
+        a Cloudflare Worker proxy whose source lives in <code>/proxy</code> of the
+        <a href="https://github.com/oscarcv125/leethelp">public repository</a>.
+        Nothing is logged by us.
+      </p>
+
+      <h2>What the extension does with your data</h2>
+      <ul>
+        <li>
+          <strong>Problem text.</strong> When the overlay is open on a supported
+          problem page (LeetCode, Codeforces, HackerRank, AtCoder, CodeChef), the
+          content script scrapes the problem statement. When you use the code review
+          or complexity tools, it also grabs the contents of the code editor. That
+          data goes to the LLM provider you selected and nowhere else.
+        </li>
+        <li>
+          <strong>Your API keys.</strong> Stored via <code>chrome.storage.sync</code>.
+          The extension only attaches each key to requests made to that specific
+          provider. Keys are not sent anywhere else.
+        </li>
+        <li>
+          <strong>Preferences.</strong> Language, provider, model, theme,
+          temperature, and the onboarding timestamp are stored in
+          <code>chrome.storage.sync</code>.
+        </li>
+      </ul>
+
+      <h2>What the extension does not do</h2>
+      <ul>
+        <li>No analytics. No telemetry. No error reporting.</li>
+        <li>
+          No third-party requests except to the LLM provider you selected (and,
+          optionally, the community proxy below).
+        </li>
+        <li>
+          No key transmitted to any URL other than the endpoint of its own provider
+          (<code>api.openai.com</code>, <code>api.anthropic.com</code>, and so on).
+        </li>
+        <li>No access to any tab other than the active supported problem page.</li>
+      </ul>
+
+      <h2>The community proxy</h2>
+      <p>
+        If you enable the community proxy during onboarding, or paste a URL into
+        <strong>Settings → Community proxy</strong>, then all of your Groq calls are
+        routed through that URL instead of directly to Groq. The default community
+        proxy is a Cloudflare Worker whose complete source is in
+        <code>/proxy/worker.js</code> of the repository. It:
+      </p>
+      <ul>
+        <li>Holds a shared Groq key server-side and forwards the request.</li>
+        <li>Applies a per-IP rate limit (default: 20 requests per 10 minutes).</li>
+        <li>Enforces a whitelist of Groq models.</li>
+        <li>
+          Does not log request bodies. Cloudflare's own edge logs may retain IP and
+          timestamp per their standard log retention.
+        </li>
+      </ul>
+      <p>
+        If you'd rather not trust the community proxy, leave the field blank, deploy
+        your own worker in about ten minutes following
+        <code>/proxy/README.md</code>, or paste your own Groq key and skip the proxy
+        entirely.
+      </p>
+
+      <h2>Browser permissions</h2>
+      <ul>
+        <li><code>storage</code>: for the settings above.</li>
+        <li><code>activeTab</code>, <code>scripting</code>: to inject the overlay when you ask for it.</li>
+        <li><code>contextMenus</code>: for the right-click "Explain selection" action.</li>
+        <li>
+          Host permissions listed in <code>manifest.json</code>: limited to the
+          supported problem sites and the specific LLM provider endpoints.
+        </li>
+      </ul>
+
+      <h2>Reporting a concern</h2>
+      <p>
+        Open an issue at
+        <a href="https://github.com/oscarcv125/leethelp/issues">github.com/oscarcv125/leethelp/issues</a>.
+      </p>
+
+      <footer>
+        Last updated 20 July 2026. Source of this page:
+        <a href="https://github.com/oscarcv125/leethelp/blob/main/privacy.html">privacy.html</a>.
+      </footer>
+    </main>
+  </body>
+</html>

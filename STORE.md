@@ -9,9 +9,9 @@ Copy-paste-ready fields for the [developer dashboard](https://chrome.google.com/
 - **Language**: English
 - **Homepage URL**: `https://github.com/oscarcv125/leethelp`
 - **Support URL**: `https://github.com/oscarcv125/leethelp/issues`
-- **Privacy policy URL**: `https://raw.githubusercontent.com/oscarcv125/leethelp/main/PRIVACY.md`
+- **Privacy policy URL**: `https://oscarcv125.github.io/leethelp/privacy.html`
 
-If Google rejects the raw GitHub URL, enable GitHub Pages on the repo (Settings → Pages → Source: main / root) and use `https://oscarcv125.github.io/leethelp/PRIVACY` instead.
+Served by the `privacy.html` file at the repo root via GitHub Pages.
 
 ## Summary (132 characters max)
 
