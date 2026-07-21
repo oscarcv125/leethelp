@@ -1465,7 +1465,6 @@ pre.lh-code code::-webkit-scrollbar-thumb {
 [data-theme="modern"] .inline-select select,
 [data-theme="modern"] .letter .from,
 [data-theme="modern"] .ghost-btn,
-[data-theme="modern"] .lh-viz-caption,
 [data-theme="modern"] .lh-empty,
 [data-theme="modern"] .swatch-title,
 [data-theme="modern"] .dek,
@@ -1491,7 +1490,6 @@ pre.lh-code code::-webkit-scrollbar-thumb {
 [data-theme="modern"] .response h2::before,
 [data-theme="modern"] .response h3::before,
 [data-theme="modern"] .tool-name::before,
-[data-theme="modern"] .lh-viz-caption::before,
 [data-theme="modern"] .lh-grounding::before,
 [data-theme="modern"] .colophon .col-left .tiny-label::after,
 [data-theme="modern"] pre.lh-code .lh-code-lang::before,
@@ -1608,7 +1606,7 @@ pre.lh-code code::-webkit-scrollbar-thumb {
 [data-theme="codey"] .response h2::before,
 [data-theme="codey"] .response h3::before { content: "# "; color: var(--accent); }
 [data-theme="codey"] .tool-name::before { content: "$ "; color: var(--accent); font-style: normal; }
-[data-theme="codey"] .lh-viz-caption::before { content: "// "; color: var(--ink-4); }
+{ content: "// "; color: var(--ink-4); }
 [data-theme="codey"] .lh-grounding::before { content: "# grounded: "; color: var(--ink-4); font-style: normal; }
 [data-theme="codey"] .lh-grounding .lh-tag { color: var(--accent); }
 
