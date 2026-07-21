@@ -6,7 +6,7 @@
   "minimum_chrome_version": "114",
   "homepage_url": "https://github.com/oscarcv125/leethelp",
   "author": "oscarcv125",
-  "description": "Progressive hints, code review, complexity analysis, and a 100-pattern DSA reference for LeetCode, Codeforces, HackerRank, AtCoder, and CodeChef. Bring your own OpenAI, Anthropic, Gemini, Groq, or OpenRouter key.",
+  "description": "Progressive hints for LeetCode, Codeforces, HackerRank, AtCoder and CodeChef. Code rating and a 100-pattern DSA reference.",
   "action": {
     "default_title": "LeetHelp",
     "default_popup": "popup/popup.html",
