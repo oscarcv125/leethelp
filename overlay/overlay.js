@@ -760,6 +760,8 @@ async function pickOnboardingChoice(choice) {
 function bindOnboarding() {
   const sheet = $("#onboarding");
   if (!sheet) return;
+  const proxyBtn = $("#onboardProxyBtn");
+  if (proxyBtn && DEFAULT_PROXY_URL) proxyBtn.hidden = false;
   if (!hasBackend()) openOnboarding();
   const currentTheme = settings.theme || "notebook";
   sheet.querySelectorAll('.theme-picker input[type="radio"]').forEach((r) => {
