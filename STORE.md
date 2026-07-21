@@ -32,7 +32,6 @@ WHAT'S INSIDE
 - Hints in five tiers: Nudge, Concept, Approach, Pseudocode, Full Solution.
 - Dialogue: chat with the model, grounded on the scraped problem.
 - Instruments: rate my solution (per-axis grade card), review my code, convert to another language, analyze complexity, generate edge cases, list related patterns.
-- Visualize: canvas simulations of BFS, DFS, Dijkstra, A*, bubble/quick/merge sort, and binary search. Adjustable tempo.
 - Reference: a browsable DSA library with about 100 patterns and Python templates. Search + eight-chapter filter. Doubles as retrieval that grounds the hints.
 - Three themes: warm notebook (default), clean modern, or an IDE-style Codey theme.
 
@@ -118,7 +117,7 @@ Suggested shots (open the overlay on a LeetCode problem for each):
 1. Overlay open on a LeetCode problem, showing the Hints tab with tier 2 selected.
 2. Tools tab, with the Rate my solution card visible (grade + per-axis scores).
 3. Reference tab, list view showing several patterns.
-4. Visualize tab, mid-Dijkstra with the path highlighted.
+4. Reference detail view of one pattern with its Python template.
 5. Onboarding sheet with the three theme swatches.
 
 Take at 1280x800. Use the Codey theme for one shot for variety.

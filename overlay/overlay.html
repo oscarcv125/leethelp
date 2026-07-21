@@ -88,8 +88,7 @@
         <button class="chapter active" data-tab="hints" role="tab"><span class="numeral">i</span>hints</button>
         <button class="chapter" data-tab="chat" role="tab"><span class="numeral">ii</span>dialogue</button>
         <button class="chapter" data-tab="tools" role="tab"><span class="numeral">iii</span>tools</button>
-        <button class="chapter" data-tab="viz" role="tab"><span class="numeral">iv</span>visualize</button>
-        <button class="chapter" data-tab="reference" role="tab"><span class="numeral">v</span>reference</button>
+        <button class="chapter" data-tab="reference" role="tab"><span class="numeral">iv</span>reference</button>
       </nav>
 
       <hr class="rule" />
@@ -158,43 +157,6 @@
             </div>
             <article class="response" id="toolOut"></article>
           </div>
-        </section>
-
-        <section class="folio" data-panel="viz">
-          <div class="folio-head">
-            <span class="section-mark">§</span>
-            <h2 class="folio-title">Visualize</h2>
-            <div class="folio-controls">
-              <label class="inline-select">
-                <span>algo</span>
-                <select id="vizSelect">
-                  <option value="bfs">BFS · grid</option>
-                  <option value="dfs">DFS · grid</option>
-                  <option value="dijkstra">Dijkstra · weighted</option>
-                  <option value="astar">A* · grid</option>
-                  <option value="sort-bubble">Bubble sort</option>
-                  <option value="sort-quick">Quick sort</option>
-                  <option value="sort-merge">Merge sort</option>
-                  <option value="binary-search">Binary search</option>
-                </select>
-              </label>
-            </div>
-          </div>
-          <div class="viz-controls">
-            <button class="link-btn" id="vizPlay">play</button>
-            <span class="dot">·</span>
-            <button class="link-btn" id="vizPause">pause</button>
-            <span class="dot">·</span>
-            <button class="link-btn" id="vizReset">reset</button>
-            <label class="inline-select speed">
-              <span>tempo</span>
-              <input type="range" id="vizSpeed" min="1" max="60" value="20" />
-            </label>
-          </div>
-          <figure class="plate">
-            <canvas id="vizCanvas" width="440" height="380"></canvas>
-            <figcaption id="vizCaption">Choose an algorithm and press <em>play</em>.</figcaption>
-          </figure>
         </section>
 
         <section class="folio" data-panel="reference">

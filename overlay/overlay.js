@@ -11,7 +11,6 @@ import { PROVIDERS, DEFAULT_PROXY_URL } from "../lib/providers.js";
 import { getSettings, setSettings } from "../lib/storage.js";
 import { renderMarkdown } from "./markdown.js";
 import { highlight as highlightCode } from "./highlight.js";
-import { runVisualization } from "../visualizations/viz.js";
 import { PATTERNS } from "../knowledge/patterns.js";
 import { TEMPLATE_BY_ID } from "../knowledge/templates.js";
 import { REFS, EXTERNAL_SITES } from "../knowledge/references.js";
@@ -430,44 +429,6 @@ function bindTools() {
   const back = $("#toolBack");
   if (back) back.addEventListener("click", closeToolDetail);
 }
-function bindViz() {
-  const canvas = $("#vizCanvas");
-  const sel = $("#vizSelect");
-  const speed = $("#vizSpeed");
-  const caption = $("#vizCaption");
-  if (!canvas || !sel) return;
-  let controller = null;
-  let currentKind = null;
-
-  const start = (kind) => {
-    const chosen = kind || sel.value;
-    try { controller?.stop(); } catch {}
-    controller = null;
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    controller = runVisualization({
-      kind: chosen,
-      canvas,
-      speed: Number(speed.value) || 20,
-      onCaption: (t) => { caption.textContent = t; }
-    });
-    currentKind = chosen;
-    controller.play();
-  };
-
-  const onChange = () => {
-    if (sel.value !== currentKind) start(sel.value);
-  };
-
-  $("#vizPlay")?.addEventListener("click", () => (controller ? controller.play() : start()));
-  $("#vizPause")?.addEventListener("click", () => controller?.pause());
-  $("#vizReset")?.addEventListener("click", () => start(sel.value));
-  sel.addEventListener("change", onChange);
-  sel.addEventListener("input", onChange);
-  speed.addEventListener("input", () => controller?.setSpeed?.(Number(speed.value)));
-
-  start();
-}
 function bindReferenceExplorer() {
   const listView = $('[data-view="list"]');
   const detailView = $("#refDetail");
@@ -841,7 +802,6 @@ async function init() {
   bindTabs();
   bindChat();
   bindTools();
-  bindViz();
   bindReferenceExplorer();
   bindHeader();
   bindDrag();

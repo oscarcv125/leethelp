@@ -70,8 +70,6 @@
         "overlay/overlay.html",
         "overlay/overlay.js",
         "overlay/overlay.css",
-        "visualizations/*.js",
-        "visualizations/*.html",
         "lib/*.js"
       ],
       "matches": ["<all_urls>"]

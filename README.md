@@ -11,8 +11,7 @@ Five hint tiers, from a Socratic question all the way through to the full soluti
 There is also:
 
 - A chat panel that stays grounded on the scraped problem.
-- Tools for reviewing your code, translating it to another language, analyzing complexity, and generating adversarial test cases.
-- Canvas simulations for BFS, DFS, Dijkstra, A*, bubble/quick/merge sort, and binary search.
+- Tools for rating your solution, reviewing your code, translating it to another language, analyzing complexity, and generating adversarial test cases.
 - A browsable DSA reference with about a hundred patterns, each with a `when to use`, an `idea`, a `watch` list, and a Python template. It doubles as retrieval for the hints: when you ask something, a small retriever pulls a few likely patterns from the bundled corpus and hands them to the model as context.
 - Three themes: a warm notebook look (default), a clean modern one, and an IDE look built on JetBrains Mono.
 
@@ -51,7 +50,6 @@ knowledge/
   templates.js                 canonical Python templates
   references.js                external cp-algorithms links
   complexity.js                Big-O cheatsheet
-visualizations/viz.js          canvas simulations
 proxy/                         optional Cloudflare Worker
 icons/
 ```
